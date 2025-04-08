@@ -1,63 +1,134 @@
-<!DOCTYPE html><html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat with <%= matchedUser.name %></title>
-  
-    <link rel="stylesheet" href="/styles/main.css">
-  </head>
-  <body>
-    <div class="container">
-      <h1>Chat with <%= matchedUser.name %></h1>
-  
-      <div id="chat-box" class="chat-box">
-        <!-- Messages will be dynamically added here -->
-      </div>
-  
-      <!-- Chat Form -->
-      <form id="chat-form" class="chat-form">
-        <input type="text" name="message" placeholder="Type your message here" required class="chat-input">
-        <button type="submit" class="send-button">Send</button>
-      </form>
-  
-      <!-- Back to Matches Button -->
-      <button class="back-button" onclick="window.location.href='/matchesPage'">Back to Matches</button>
-    </div>
-  
-    <script src="/socket.io/socket.io.js"></script> <!-- Include Socket.io -->
-    <script>
-      const socket = io(); // Create a socket connection
-      const chatBox = document.getElementById("chat-box");
-      const chatForm = document.getElementById("chat-form");
-      const messageInput = document.querySelector(".chat-input");
-  
-      // Emit a message when the form is submitted
-      chatForm.addEventListener("submit", (e) => {
-        e.preventDefault(); // Prevent page reload
-  
-        const message = messageInput.value.trim();
-        if (message) {
-          // Send message to the server
-          socket.emit("sendMessage", {
-            message,
-            matchedUserId:  "<%= matchedUser._id %>",// Send matched user ID
-            senderId: "<%= user._id %>" // Send current user ID
-          });
-          messageInput.value = ""; // Clear input field
-        }
-      });
-  
-      // to listen for incoming messages from the server
-      socket.on("receiveMessage", (data) => {
-        // Adding a new message to chat box
-        const messageElement = document.createElement("div");
-        messageElement.classList.add("message");
-        messageElement.textContent = data.message;
-        chatBox.appendChild(messageElement);
-        chatBox.scrollTop = chatBox.scrollHeight;
-      });
-    </script>
-  </body>
-  </html>
-  
-      
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Chat with <%= matchedUser.name %></title>
+
+        <link rel="stylesheet" href="/styles/main.css" />
+    </head>
+    <body>
+        <div class="container">
+            <h1>Chat with <%= matchedUser.name %></h1>
+
+            <div id="chat-box" class="chat-box">
+                <!-- Messages will be dynamically added here -->
+            </div>
+
+            <!-- Chat Form -->
+            <form id="chat-form" class="chat-form">
+                <input type="text" name="message" placeholder="Type your message here" required class="chat-input" />
+                <button type="submit" class="send-button">Send</button>
+            </form>
+
+            <!-- Back to Matches Button -->
+            <button class="back-button" onclick="window.location.href='/matchesPage'">Back to Matches</button>
+        </div>
+
+        <script src="/socket.io/socket.io.js"></script>
+        <!-- Include Socket.io -->
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const chatForm = document.getElementById('chat-form');
+                const chatBox = document.getElementById('chat-box');
+                const messageInput = chatForm ? chatForm.querySelector('input[name="message"]') : null;
+
+                // if (!chatForm || !chatBox || !messageInput) {
+                //     console.error('Error: Missing chat form elements. Skipping script...');
+                //     return; // Stops the script if elements are missing
+                // }
+
+                // Initialize Socket.IO with the correct server URL
+                const socket = io('http://localhost:8001', {
+                    transports: ['websocket'],
+                    withCredentials: true, // Handles authentication sessions if needed
+                });
+
+                const currentUserId = '<%= user._id %>'; // Local storage
+                const matchedUserId = '<%= matchedUser._id %>';
+                console.log('currentUserId', currentUserId);
+                console.log(matchedUserId);
+
+                if (!currentUserId || !matchedUserId) {
+                    console.error('Error: Missing user IDs!', { currentUserId, matchedUserId });
+                    return;
+                }
+
+                // **Retrieve User IDs from EJS template**
+                /*const currentUserId = "67f0320e5910f87821220891";
+            const matchedUserId = "67f0320e5910f87821220892"; */
+
+                // **Fetch previous messages when the page loads**
+                async function fetchMessages() {
+                    try {
+                        const response = await fetch(
+                            `http://localhost:8001/messages?senderId=${currentUserId}&receiverId=${matchedUserId}`,
+                        );
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+
+                        const messages = await response.json();
+
+                        // Debugging: Log the messages to check their structure
+                        console.log('Fetched messages:', messages);
+
+                        if (Array.isArray(messages)) {
+                            messages.forEach((msg) => {
+                                appendMessage(msg.sender === currentUserId ? 'You' : 'Them', msg.message);
+                            });
+                        } else {
+                            console.error('Error: Messages are not an array', messages);
+                        }
+                    } catch (error) {
+                        console.error('Error fetching messages:', error);
+                    }
+                }
+
+                // Call fetchMessages when the page loads
+                (async () => {
+                    await fetchMessages();
+                })();
+
+                // **Handle message submission**
+                chatForm.addEventListener('submit', (e) => {
+                    e.preventDefault(); // Prevents page reload
+                    const message = messageInput.value.trim();
+
+                    if (message) {
+                        // **Send message to server**
+                        socket.emit('sendMessage', {
+                            sender: currentUserId,
+                            receiver: matchedUserId,
+                            message: message,
+                        });
+
+                        // **Display message in the chat box**
+                        appendMessage('You', message);
+                        messageInput.value = ''; // Clears input field
+                    }
+                });
+
+                // **Listen for new messages from the server**
+                socket.on('newMessage', (data) => {
+                    if (data.sender !== currentUserId) {
+                        appendMessage('Them', data.message);
+                    }
+                });
+
+                // **Function to display messages**
+                function appendMessage(sender, content) {
+                    const messageElement = document.createElement('div');
+                    messageElement.classList.add('message');
+                    messageElement.innerHTML = `<strong>${sender}:</strong> ${content}`;
+                    chatBox.appendChild(messageElement);
+
+                    // Scroll chat box to the bottom
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                }
+
+                console.log('Chat script loaded successfully!');
+            });
+        </script>
+    </body>
+</html>

@@ -47,15 +47,12 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(express.static(path.join(__dirname, 'views')));
-
 app.use(cors(corsOptions));
 
-app.use(express.static(path.join(__dirname, '../views'))); // to use files from views
-app.use('/node_modules', express.static(path.join(__dirname, 'node_modules')));
+app.use(express.static(path.join(__dirname, '/views'))); // to use files from views
 
 // Set views directory
-app.set('views', path.join(__dirname, '../views'));
+app.set('views', path.join(__dirname, '/views'));
 app.set('view engine', 'ejs');
 
 app.use(express.urlencoded({ extended: false }));
@@ -73,6 +70,8 @@ app.use(methodOverride('_method'));
 
 // Passport Configuration
 initializePassport(passport);
+
+app.use('/messages', messageRoutes);
 
 // MongoDB Connection
 mongoose
@@ -249,64 +248,7 @@ app.get('/matchesPage', checkAuthenticated, async (req, res) => {
             return res.status(404).send('Current user not found');
         }
 
-        app.use('/messages', messageRoutes);
-
         //saving a message
-        app.post('/messages', async (req, res) => {
-            try {
-                const { senderId, receiverId, message, chatId } = req.body;
-
-                // Validate request
-                if (!senderId || !receiverId || !message || !chatId) {
-                    return res.status(400).json({ error: 'All fields are required' });
-                }
-
-                // Create new message
-                const newMessage = new Message({
-                    senderId,
-                    receiverId,
-                    message,
-                    chatId,
-                });
-
-                // Save message to database
-                await newMessage.save();
-
-                res.status(201).json(newMessage);
-            } catch (error) {
-                console.error('Error saving message:', error);
-                res.status(500).json({ error: 'Internal Server Error' });
-            }
-        });
-
-        //fetching a message
-        app.get('/messages', async (req, res) => {
-            try {
-                // Get senderId and receiverId from the query parameters (sent from the frontend)
-                const { senderId, receiverId } = req.query;
-
-                // Check if both senderId and receiverId are provided in the request
-                if (!senderId || !receiverId) {
-                    return res.status(400).json({ error: 'senderId and receiverId are required' });
-                }
-
-                // Find messages where:
-                // - senderId sent a message to receiverId
-                // - OR receiverId sent a message to senderId
-                const messages = await Message.find({
-                    $or: [
-                        { senderId, receiverId }, // Messages sent by senderId to receiverId
-                        { senderId: receiverId, receiverId: senderId }, // Messages sent by receiverId to senderId
-                    ],
-                }).sort({ createdAt: 1 }); // Sort messages from oldest to newest
-
-                // If no messages found, return an empty array instead of an error
-                res.json(messages);
-            } catch (error) {
-                console.error('Error fetching messages:', error);
-                res.status(500).json({ error: 'Internal Server Error' });
-            }
-        });
 
         // Fetch all users except the current user
         const allUsers = await User.find({ _id: { $ne: req.user._id } });
@@ -355,3 +297,59 @@ function checkNotAuthenticated(req, res, next) {
     if (req.isAuthenticated()) return res.redirect('/');
     next();
 }
+
+app.post('/messages', async (req, res) => {
+    try {
+        const { senderId, receiverId, message, chatId } = req.body;
+
+        // Validate request
+        if (!senderId || !receiverId || !message || !chatId) {
+            return res.status(400).json({ error: 'All fields are required' });
+        }
+
+        // Create new message
+        const newMessage = new Message({
+            senderId,
+            receiverId,
+            message,
+            chatId,
+        });
+
+        // Save message to database
+        await newMessage.save();
+
+        res.status(201).json(newMessage);
+    } catch (error) {
+        console.error('Error saving message:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+//fetching a message
+app.get('/messages', async (req, res) => {
+    try {
+        // Get senderId and receiverId from the query parameters (sent from the frontend)
+        const { senderId, receiverId } = req.query;
+
+        // Check if both senderId and receiverId are provided in the request
+        if (!senderId || !receiverId) {
+            return res.status(400).json({ error: 'senderId and receiverId are required' });
+        }
+
+        // Find messages where:
+        // - senderId sent a message to receiverId
+        // - OR receiverId sent a message to senderId
+        const messages = await Message.find({
+            $or: [
+                { senderId, receiverId }, // Messages sent by senderId to receiverId
+                { senderId: receiverId, receiverId: senderId }, // Messages sent by receiverId to senderId
+            ],
+        }).sort({ createdAt: 1 }); // Sort messages from oldest to newest
+
+        // If no messages found, return an empty array instead of an error
+        res.json(messages);
+    } catch (error) {
+        console.error('Error fetching messages:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
