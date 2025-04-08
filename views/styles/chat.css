@@ -4,21 +4,20 @@
     border: 1px solid #ccc;
     padding: 10px;
     overflow-y: auto;
-  }
-  
-  .message {
+}
+
+.message {
     padding: 5px;
     margin-bottom: 10px;
     border-bottom: 1px solid #ddd;
-  }
-  
-  .chat-input {
+}
+
+.chat-input {
     width: 80%;
     padding: 10px;
-  }
-  
-  .send-button {
+}
+
+.send-button {
     width: 18%;
     padding: 10px;
-  }
-  
+}

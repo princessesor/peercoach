@@ -3,10 +3,10 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-  }
-  
-  /* Profile Page Styling */
-  .profile-container {
+}
+
+/* Profile Page Styling */
+.profile-container {
     font-family: 'Arial', sans-serif;
     background-color: #f4f4f9;
     color: #333;
@@ -17,19 +17,19 @@
     justify-content: flex-start;
     align-items: center;
     min-height: 100vh;
-  }
-  
-  /* Heading Styling */
-  .profile-container h1 {
+}
+
+/* Heading Styling */
+.profile-container h1 {
     font-size: 2rem;
     color: #333;
     margin-bottom: 30px;
     font-weight: 600;
     text-align: center;
-  }
-  
-  /* Form Styling */
-  .profile-container form {
+}
+
+/* Form Styling */
+.profile-container form {
     background-color: #fff;
     padding: 20px;
     border-radius: 8px;
@@ -37,21 +37,22 @@
     width: 100%;
     max-width: 800px;
     margin-bottom: 30px;
-  }
-  
-  .profile-container form div {
+}
+
+.profile-container form div {
     margin-bottom: 20px;
-  }
-  
-  .profile-container label {
+}
+
+.profile-container label {
     font-size: 1rem;
     color: #333;
     font-weight: 500;
     display: block;
     margin-bottom: 8px;
-  }
-  
-  .profile-container textarea, .profile-container input[type="text"] {
+}
+
+.profile-container textarea,
+.profile-container input[type='text'] {
     width: 100%;
     padding: 12px;
     font-size: 1rem;
@@ -62,21 +63,22 @@
     margin-top: 5px;
     box-sizing: border-box;
     transition: border-color 0.3s ease;
-  }
-  
-  .profile-container textarea:focus, .profile-container input[type="text"]:focus {
+}
+
+.profile-container textarea:focus,
+.profile-container input[type='text']:focus {
     border-color: #007bff;
     outline: none;
-  }
-  
-  .profile-container small {
+}
+
+.profile-container small {
     font-size: 0.875rem;
     color: #666;
     display: block;
     margin-top: 5px;
-  }
-  
-  .profile-container button {
+}
+
+.profile-container button {
     padding: 12px 24px;
     font-size: 1.1rem;
     color: white;
@@ -86,25 +88,26 @@
     cursor: pointer;
     transition: background-color 0.3s ease;
     width: auto;
-    max-width: 300px;  /* Limit max width of buttons */
-    margin: 0 auto;    /* Center the buttons */
-  }
-  
-  .profile-container button:hover {
+    max-width: 300px; /* Limit max width of buttons */
+    margin: 0 auto; /* Center the buttons */
+}
+
+.profile-container button:hover {
     background-color: #0056b3;
-  }
-  
-  /* Button Container for Log Out and Find Matches */
-  .action-buttons {
+}
+
+/* Button Container for Log Out and Find Matches */
+.action-buttons {
     display: flex;
     flex-direction: column;
     gap: 15px;
     width: 100%;
     max-width: 400px;
     margin-top: 20px;
-  }
-  
-  .logout-button, .find-matches-button {
+}
+
+.logout-button,
+.find-matches-button {
     padding: 12px 24px;
     font-size: 1rem;
     color: white;
@@ -113,45 +116,44 @@
     cursor: pointer;
     transition: background-color 0.3s ease;
     width: auto;
-    max-width: 300px;  /* Limit max width of buttons */
-    margin: 0 auto;    /* Center the buttons */
-  }
-  
-  .logout-button {
+    max-width: 300px; /* Limit max width of buttons */
+    margin: 0 auto; /* Center the buttons */
+}
+
+.logout-button {
     background-color: #dc3545; /* Red for log out */
-  }
-  
-  .logout-button:hover {
+}
+
+.logout-button:hover {
     background-color: #c82333;
-  }
-  
-  .find-matches-button {
+}
+
+.find-matches-button {
     background-color: #28a745; /* Green for find matches */
-  }
-  
-  .find-matches-button:hover {
+}
+
+.find-matches-button:hover {
     background-color: #218838;
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
     .profile-container form {
-      padding: 15px;
+        padding: 15px;
     }
-  
+
     .profile-container h1 {
-      font-size: 1.6rem;
+        font-size: 1.6rem;
     }
-  
+
     .action-buttons {
-      flex-direction: column;
-      align-items: center;
+        flex-direction: column;
+        align-items: center;
     }
-  
-    .logout-button, .find-matches-button {
-      width: 100%;
-      max-width: 300px; /* Ensure buttons aren't too wide on small screens */
+
+    .logout-button,
+    .find-matches-button {
+        width: 100%;
+        max-width: 300px; /* Ensure buttons aren't too wide on small screens */
     }
-  }
-  
-  
+}
