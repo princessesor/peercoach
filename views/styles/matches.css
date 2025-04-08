@@ -1,0 +1,118 @@
+/* General Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Center the entire page */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f9;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centers horizontally */
+  justify-content: center; /* Centers vertically */
+  min-height: 100vh;
+  text-align: center;
+  padding: 20px;
+}
+
+/* Heading */
+h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Center the match list */
+ul {
+  list-style: none;
+  width: 100%;
+  max-width: 700px; /* Matches the profile form width */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Ensures everything inside is centered */
+  gap: 15px;
+  padding: 0;
+}
+
+/* Match Card */
+li {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 650px; /* Makes it rectangular instead of square */
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Card Content */
+li h3 {
+  font-size: 1.4rem;
+  color: #007bff;
+  margin-bottom: 10px;
+}
+
+li p {
+  font-size: 1rem;
+  color: #555;
+  margin: 5px 0;
+  width: 90%;
+  text-align: left;
+}
+
+/* Buttons */
+button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: fit-content;
+  margin-top: 10px;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+button:first-of-type {
+  background-color: #007bff; /* Chat Button */
+}
+
+button:first-of-type:hover {
+  background-color: #0056b3;
+}
+
+button:last-of-type {
+  background-color: hsl(261, 70%, 54%); /* Back to Home */
+}
+
+button:last-of-type:hover {
+  background-color: #6a23c8;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  ul {
+    max-width: 90%;
+  }
+
+  h1 {
+    font-size: 1.6rem;
+  }
+
+  li {
+    width: 95%; /* Keeps it rectangular while being responsive */
+  }
+}
+

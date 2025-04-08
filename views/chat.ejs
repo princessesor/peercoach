@@ -1,0 +1,63 @@
+<!DOCTYPE html><html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with <%= matchedUser.name %></title>
+  
+    <link rel="stylesheet" href="/styles/main.css">
+  </head>
+  <body>
+    <div class="container">
+      <h1>Chat with <%= matchedUser.name %></h1>
+  
+      <div id="chat-box" class="chat-box">
+        <!-- Messages will be dynamically added here -->
+      </div>
+  
+      <!-- Chat Form -->
+      <form id="chat-form" class="chat-form">
+        <input type="text" name="message" placeholder="Type your message here" required class="chat-input">
+        <button type="submit" class="send-button">Send</button>
+      </form>
+  
+      <!-- Back to Matches Button -->
+      <button class="back-button" onclick="window.location.href='/matchesPage'">Back to Matches</button>
+    </div>
+  
+    <script src="/socket.io/socket.io.js"></script> <!-- Include Socket.io -->
+    <script>
+      const socket = io(); // Create a socket connection
+      const chatBox = document.getElementById("chat-box");
+      const chatForm = document.getElementById("chat-form");
+      const messageInput = document.querySelector(".chat-input");
+  
+      // Emit a message when the form is submitted
+      chatForm.addEventListener("submit", (e) => {
+        e.preventDefault(); // Prevent page reload
+  
+        const message = messageInput.value.trim();
+        if (message) {
+          // Send message to the server
+          socket.emit("sendMessage", {
+            message,
+            matchedUserId:  "<%= matchedUser._id %>",// Send matched user ID
+            senderId: "<%= user._id %>" // Send current user ID
+          });
+          messageInput.value = ""; // Clear input field
+        }
+      });
+  
+      // to listen for incoming messages from the server
+      socket.on("receiveMessage", (data) => {
+        // Adding a new message to chat box
+        const messageElement = document.createElement("div");
+        messageElement.classList.add("message");
+        messageElement.textContent = data.message;
+        chatBox.appendChild(messageElement);
+        chatBox.scrollTop = chatBox.scrollHeight;
+      });
+    </script>
+  </body>
+  </html>
+  
+      

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile Page</title>
+
+  <!-- css links -->
+  <!--   <link rel="stylesheet" href="/styles/main.css">  -->  
+  <link rel="stylesheet" href="/styles/profile.css">
+
+</head>
+<div class="profile-container">
+<body>
+  <h1>Hi, <%= name %></h1>
+
+  <form action="/updateProfile" method="POST">
+    <div>
+      <label for="bio">Bio:</label>
+      <textarea id="bio" name="bio" rows="4" cols="50"><%= user.bio %></textarea>
+    </div>
+
+    <div>
+        <label for="skillsDesired">Skills Desired:</label>
+        <input type="text" id="skillsDesired" name="skillsDesired" value="<%= user.skillsDesired.join(', ') %>" placeholder="e.g. JavaScript, Python">
+        <small>Separate multiple skills with commas.</small>
+      </div>
+
+      <div>
+        <label for="skillsHave">Skills You Have:</label>
+        <input type="text" id="skillsHave" name="skillsHave" value="<%= user.skillsHave.join(', ') %>" placeholder="e.g. React, Node.js">
+        <small>Separate multiple skills with commas.</small>
+      </div>
+
+      <div class="form--actions">
+        <button type="submit">Save Profile</button>
+      </div>
+    </form>
+
+    <div>
+      <a href="/matchesPage">🔍 Find Peer Matches</a> 
+    </div>
+
+  <form action="/logout?_method=DELETE" method="POST">
+    <button type="submit" class="logout-button">Log Out</button>
+  </form>
+</body>
+</div>
+</html>
