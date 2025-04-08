@@ -6,21 +6,22 @@ import passport from 'passport';
 import flash from 'express-flash';
 import session from 'express-session';
 import methodOverride from 'method-override';
-import initializePassport from './passport-config.js';
+import initializePassport from './src/passport-config.js';
 import cors from 'cors';
-import User from './models/user.js';
+import User from './src/models/user.js';
 import http from 'http';
 import { Server } from 'socket.io';
-import Message from './models/messages.js';
+import Message from './src/models/messages.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import bodyParser from 'body-parser';
-import messageRoutes from './routes/messageRoutes.js';
+import messageRoutes from './src/routes/messageRoutes.js';
 
 const app = express();
-dotenv.config();
+dotenv.config({ path: './.env.dev' });
 
 const PORT = process.env.PORT || 8001;
+
 const MONGOURL = process.env.MONGO_URL;
 
 // Middleware
