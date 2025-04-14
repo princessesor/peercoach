@@ -16,6 +16,11 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import bodyParser from 'body-parser';
 import messageRoutes from './src/routes/messageRoutes.js';
+import profileRoutes from './src/routes/profileRoutes.js';
+import matchesRoutes  from './src/routes/matchesRoutes.js';
+import chatRoutes from './src/routes/chatRoutes.js';
+import authRoutes from './src/routes/authRoutes.js';
+import homeRoutes from './src/routes/homeRoutes.js';
 
 const app = express();
 dotenv.config({ path: './.env.dev' });
@@ -110,12 +115,6 @@ mongoose
                 console.log('send_message event triggered'); // Debugging log to check if event is received
                 console.log(data);
                 try {
-                    // Validate senderId and receiverId
-                    /*if (!mongoose.Types.ObjectId.isValid(data.senderId) || !mongoose.Types.ObjectId.isValid(data.receiverId)) {
-            console.error("Invalid ObjectId format for senderId or receiverId");
-            return socket.emit("error", { message: "Invalid user ID format" });
-          } */
-
                     // Convert senderId and receiverId to ObjectId
                     const senderObjectId = new mongoose.Types.ObjectId(data.sender);
                     const receiverObjectId = new mongoose.Types.ObjectId(data.receiver);
@@ -129,8 +128,6 @@ mongoose
 
                     await newMessage.save(); // Save the message in the database
                     console.log('Message saved:', newMessage);
-
-                    // socket.emit("message_sent", { success: true, message: newMessage });
 
                     //find recerivers socket id
                     const receiverSocket = Object.keys(users).find((key) => users[key].toString() === data.receiverId.toString());
@@ -153,8 +150,17 @@ mongoose
     })
     .catch((error) => console.log(error));
 
-// Routes
-app.get('/', checkAuthenticated, async (req, res) => {
+//Routes
+app.use('/', profileRoutes);
+app.use('/', matchesRoutes);
+app.use('/', chatRoutes);
+app.use('/', authRoutes);
+app.use('/', homeRoutes);
+
+
+//everything byond is a comment
+// main landing route
+/* app.get('/', checkAuthenticated, async (req, res) => {
     try {
         const user = await User.findById(req.user._id);
         res.render('index.ejs', { name: req.user.name, user });
@@ -162,10 +168,10 @@ app.get('/', checkAuthenticated, async (req, res) => {
         console.error('Error fetching user data:', error);
         res.status(500).send('Error fetching user data');
     }
-});
+}); */
 
 // Profile Route - Display user profile page
-app.get('/profile', checkAuthenticated, async (req, res) => {
+/* app.get('/profile', checkAuthenticated, async (req, res) => {
     try {
         const user = await User.findById(req.user._id); // for fetching the logged-in user from DB
         if (user) {
@@ -198,8 +204,10 @@ app.post('/updateProfile', checkAuthenticated, async (req, res) => {
         res.status(500).send('Error updating user profile');
     }
 });
+*/
 
-app.get('/login', checkNotAuthenticated, (req, res) => {
+
+/* app.get('/login', checkNotAuthenticated, (req, res) => {
     res.render('login.ejs');
 });
 
@@ -239,16 +247,16 @@ app.delete('/logout', (req, res) => {
         res.redirect('/login');
     });
 });
+*/
 
-app.get('/matchesPage', checkAuthenticated, async (req, res) => {
+//matches route
+/* app.get('/matchesPage', checkAuthenticated, async (req, res) => {
     try {
         const currentUser = await User.findById(req.user._id); // Fetch the current logged-in user
 
         if (!currentUser) {
             return res.status(404).send('Current user not found');
         }
-
-        //saving a message
 
         // Fetch all users except the current user
         const allUsers = await User.find({ _id: { $ne: req.user._id } });
@@ -265,10 +273,10 @@ app.get('/matchesPage', checkAuthenticated, async (req, res) => {
         console.error('Error fetching matches:', error);
         res.status(500).send('Error fetching matches');
     }
-});
+}); */
 
 // Chat Route
-app.get('/chat/:id', checkAuthenticated, async (req, res) => {
+/* app.get('/chat/:id', checkAuthenticated, async (req, res) => {
     try {
         const matchedUserId = req.params.id; // ID of the user to chat with
         const matchedUser = await User.findById(matchedUserId); // Fetch matched user details
@@ -285,10 +293,10 @@ app.get('/chat/:id', checkAuthenticated, async (req, res) => {
         console.error('Error fetching chat data:', error);
         res.status(500).send('Error fetching chat data');
     }
-});
+}); */
 
 // Auth Middleware
-function checkAuthenticated(req, res, next) {
+/* function checkAuthenticated(req, res, next) {
     if (req.isAuthenticated()) return next();
     res.redirect('/login');
 }
@@ -296,9 +304,9 @@ function checkAuthenticated(req, res, next) {
 function checkNotAuthenticated(req, res, next) {
     if (req.isAuthenticated()) return res.redirect('/');
     next();
-}
+} */
 
-app.post('/messages', async (req, res) => {
+/* app.post('/messages', async (req, res) => {
     try {
         const { senderId, receiverId, message, chatId } = req.body;
 
@@ -352,4 +360,4 @@ app.get('/messages', async (req, res) => {
         console.error('Error fetching messages:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
-});
+}); */
