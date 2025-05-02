@@ -21,6 +21,8 @@ import matchesRoutes  from './src/routes/matchesRoutes.js';
 import chatRoutes from './src/routes/chatRoutes.js';
 import authRoutes from './src/routes/authRoutes.js';
 import homeRoutes from './src/routes/homeRoutes.js';
+import roomRoutes from './src/routes/roomRoutes.js';
+
 
 const app = express();
 dotenv.config({ path: './.env.dev' });
@@ -55,6 +57,7 @@ app.use((req, res, next) => {
 app.use(cors(corsOptions));
 
 app.use(express.static(path.join(__dirname, '/views'))); // to use files from views
+app.use(express.static('public'))
 
 // Set views directory
 app.set('views', path.join(__dirname, '/views'));
@@ -104,6 +107,7 @@ mongoose
         const users = {};
         io.on('connection', (socket) => {
             //for listening to events
+            //chat feauture
             console.log(`User connected: ${socket.id}`);
 
             socket.on('register', (userId) => {
@@ -141,6 +145,13 @@ mongoose
                 }
             });
 
+            //video chat signaling
+            //video chat event
+            socket.on('join-room', (roomId, userId)=>{
+                socket.join(roomId)
+                socket.to(roomId).emit('user-connected', userId)
+            })
+
             socket.on('disconnect', () => {
                 delete users[socket.id];
                 io.emit('users', Object.values(users)); // Update the user list
@@ -151,6 +162,7 @@ mongoose
     .catch((error) => console.log(error));
 
 //Routes
+app.use('/room', roomRoutes);
 app.use('/', profileRoutes);
 app.use('/', matchesRoutes);
 app.use('/', chatRoutes);
@@ -158,7 +170,21 @@ app.use('/', authRoutes);
 app.use('/', homeRoutes);
 
 
-//everything byond is a comment
+//app.get('/', (req, res) => {   //get route to direct user to room
+  //res.redirect(`/${uuidV4()}`)
+//})
+
+//app.get('/', (req, res) => {
+  //  const roomId = uuidV4();
+    //console.log(`Generated Room ID: ${roomId}`);  // Check if UUID is being generated
+    //res.redirect(`/${roomId}`);
+  //});  
+
+//app.get('/:room', (req, res) => {  //creating the room
+  //  res.render('room', { roomId: req.params.room})
+//})
+
+//everything beyond is a comment
 // main landing route
 /* app.get('/', checkAuthenticated, async (req, res) => {
     try {

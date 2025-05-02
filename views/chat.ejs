@@ -23,6 +23,16 @@
 
             <!-- Back to Matches Button -->
             <button class="back-button" onclick="window.location.href='/matchesPage'">Back to Matches</button>
+            
+            <button id="createRoomBtn">Create Room</button>
+
+            <script>
+              document.getElementById('createRoomBtn').addEventListener('click', () => {
+                window.location.href = '/room/create'; // Let server handle the redirect
+              });
+            </script>
+
+
         </div>
 
         <script src="/socket.io/socket.io.js"></script>
@@ -33,12 +43,6 @@
                 const chatBox = document.getElementById('chat-box');
                 const messageInput = chatForm ? chatForm.querySelector('input[name="message"]') : null;
 
-                // if (!chatForm || !chatBox || !messageInput) {
-                //     console.error('Error: Missing chat form elements. Skipping script...');
-                //     return; // Stops the script if elements are missing
-                // }
-
-                // Initialize Socket.IO with the correct server URL
                 const socket = io('http://localhost:8001', {
                     transports: ['websocket'],
                     withCredentials: true, // Handles authentication sessions if needed
@@ -53,10 +57,6 @@
                     console.error('Error: Missing user IDs!', { currentUserId, matchedUserId });
                     return;
                 }
-
-                // **Retrieve User IDs from EJS template**
-                /*const currentUserId = "67f0320e5910f87821220891";
-            const matchedUserId = "67f0320e5910f87821220892"; */
 
                 // **Fetch previous messages when the page loads**
                 async function fetchMessages() {
