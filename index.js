@@ -17,13 +17,13 @@ import { fileURLToPath } from 'url';
 import bodyParser from 'body-parser';
 import messageRoutes from './src/routes/messageRoutes.js';
 import profileRoutes from './src/routes/profileRoutes.js';
-import matchesRoutes  from './src/routes/matchesRoutes.js';
+import matchesRoutes from './src/routes/matchesRoutes.js';
 import chatRoutes from './src/routes/chatRoutes.js';
 import authRoutes from './src/routes/authRoutes.js';
 import homeRoutes from './src/routes/homeRoutes.js';
 import roomRoutes from './src/routes/roomRoutes.js';
 
-
+//TODO: Move all configuration of a server into a config file and wrap into function. Invoke that function in this file.
 const app = express();
 dotenv.config({ path: './.env.dev' });
 
@@ -57,7 +57,7 @@ app.use((req, res, next) => {
 app.use(cors(corsOptions));
 
 app.use(express.static(path.join(__dirname, '/views'))); // to use files from views
-app.use(express.static('public'))
+app.use(express.static('public'));
 
 // Set views directory
 app.set('views', path.join(__dirname, '/views'));
@@ -147,10 +147,28 @@ mongoose
 
             //video chat signaling
             //video chat event
-            socket.on('join-room', (roomId, userId)=>{
-                socket.join(roomId)
-                socket.to(roomId).emit('user-connected', userId)
-            })
+            socket.on('join-room', (roomId, userId) => {
+                console.log(`User ${userId} joining room ${roomId}`);
+
+                // Join the room first
+                socket.join(roomId);
+
+                // Now check if the room exists and how many participants
+                const room = io.sockets.adapter.rooms.get(roomId);
+                console.log(`Room ${roomId} exists after join: ${!!room}, participants: ${room ? room.size : 0}`);
+
+                // Log users in this room
+                if (room) {
+                    console.log(`Users in room: ${Array.from(room).join(', ')}`);
+                }
+
+                // Let the user know they've successfully joined
+                socket.emit('room-joined', { roomId, success: true });
+
+                // Broadcast to everyone in the room except the sender
+                socket.to(roomId).emit('user-connected', userId);
+                console.log(`Emitted 'user-connected' to others in room ${roomId} for user ${userId}`);
+            });
 
             socket.on('disconnect', () => {
                 delete users[socket.id];
@@ -169,19 +187,18 @@ app.use('/', chatRoutes);
 app.use('/', authRoutes);
 app.use('/', homeRoutes);
 
-
 //app.get('/', (req, res) => {   //get route to direct user to room
-  //res.redirect(`/${uuidV4()}`)
+//res.redirect(`/${uuidV4()}`)
 //})
 
 //app.get('/', (req, res) => {
-  //  const roomId = uuidV4();
-    //console.log(`Generated Room ID: ${roomId}`);  // Check if UUID is being generated
-    //res.redirect(`/${roomId}`);
-  //});  
+//  const roomId = uuidV4();
+//console.log(`Generated Room ID: ${roomId}`);  // Check if UUID is being generated
+//res.redirect(`/${roomId}`);
+//});
 
 //app.get('/:room', (req, res) => {  //creating the room
-  //  res.render('room', { roomId: req.params.room})
+//  res.render('room', { roomId: req.params.room})
 //})
 
 //everything beyond is a comment
@@ -231,7 +248,6 @@ app.post('/updateProfile', checkAuthenticated, async (req, res) => {
     }
 });
 */
-
 
 /* app.get('/login', checkNotAuthenticated, (req, res) => {
     res.render('login.ejs');

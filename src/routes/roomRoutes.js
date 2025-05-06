@@ -3,6 +3,7 @@ import { v4 as uuidV4 } from 'uuid';
 
 const router = express.Router();
 
+//TODO: POST
 // Route to generate a unique room URL under /room path
 router.get('/create', (req, res) => {
     const roomId = uuidV4(); // Generate a unique room ID
