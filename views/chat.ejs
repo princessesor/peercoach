@@ -24,14 +24,47 @@
             <!-- Back to Matches Button -->
             <button class="back-button" onclick="window.location.href='/matchesPage'">Back to Matches</button>
             
+            <!-- Create Room and Join Room Buttons -->
+            <div class="room-actions">
+                <div>
+                 <!-- Buttons -->
             <button id="createRoomBtn">Create Room</button>
+            <button id="joinRoomBtn">Join Room</button>
+            <input type="text" id="roomIdInput" placeholder="Enter Room ID to Join" />   
+                </div>
+            </div>
+             
 
-            <script>
-              document.getElementById('createRoomBtn').addEventListener('click', () => {
-                window.location.href = '/room/create'; // Let server handle the redirect
-              });
-            </script>
-
+         <script>
+            // Create Room using POST
+               document.getElementById('createRoomBtn').addEventListener('click', () => {
+                fetch('/room/create', {
+                  method: 'POST',
+                 })
+               .then(res => res.json())
+               .then(data => {
+        if (data.roomId) {
+          // Redirect to the created room
+          window.location.href = `/room/${data.roomId}`;
+        } else {
+          alert('Room creation failed.');
+        }
+      })
+      .catch(error => {
+        console.error('Error creating room:', error);
+      });
+    });
+ 
+  // Join Room using input
+  document.getElementById('joinRoomBtn').addEventListener('click', () => {
+    const roomId = document.getElementById('roomIdInput').value.trim();
+    if (roomId) {
+      window.location.href = `/room/${roomId}`;
+    } else {
+      alert('Please enter a valid Room ID.');
+    }
+  });
+</script>
 
         </div>
 
