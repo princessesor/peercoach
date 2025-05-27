@@ -1,6 +1,7 @@
 import express from 'express';
 import User from '../models/user.js';
 import { checkAuthenticated } from '../middlewares/auth.js';
+import { SELF_URL } from '../config/constant.js'; // Import the base URL for the application
 
 const router = express.Router();
 
@@ -17,6 +18,7 @@ router.get('/chat/:id', checkAuthenticated, async (req, res) => {
         res.render('chat.ejs', {
             user: req.user, // Current logged-in user
             matchedUser, // Matched user to chat with
+            selfUrl: SELF_URL, // Base URL for the application
         });
     } catch (error) {
         console.error('Error fetching chat data:', error);

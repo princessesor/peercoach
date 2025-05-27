@@ -7,20 +7,19 @@
 
         <link rel="stylesheet" href="/styles/chat.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
     </head>
     <body>
         <div class="container">
-            
             <!-- Back to Matches Button -->
             <button class="back-button" onclick="window.location.href='/matchesPage'">
-                <i class="fas fa-arrow-left"></i> Back to Matches</button>
-            
+                <i class="fas fa-arrow-left"></i> Back to Matches
+            </button>
+
             <div class="title-container">
-            <h1>Chat with <%= matchedUser.name %></h1>
+                <h1>Chat with <%= matchedUser.name %></h1>
             </div>
-            
+
             <div id="chat-box" class="chat-box">
                 <!-- Messages will be dynamically added here -->
             </div>
@@ -34,51 +33,48 @@
             </form>
 
             <!-- Create Room Button at the top right -->
-            <button id="createRoomBtn" class="create-room-btn">
-               Create Room   <i class="fas fa-plus-circle"></i></button>
-            
+            <button id="createRoomBtn" class="create-room-btn">Create Room <i class="fas fa-plus-circle"></i></button>
+
             <!-- Room Actions: Join Room button at the bottom -->
             <div class="room-actions">
-                <div class="join-room-container" >
-            <input type="text" id="roomIdInput" placeholder="Enter Room ID to Join" class="room-input" />   
-                <button id="joinRoomBtn" class="join-room-btn">
-                 <i class="fas fa-door-open"></i>
-                 </button>
+                <div class="join-room-container">
+                    <input type="text" id="roomIdInput" placeholder="Enter Room ID to Join" class="room-input" />
+                    <button id="joinRoomBtn" class="join-room-btn">
+                        <i class="fas fa-door-open"></i>
+                    </button>
+                </div>
             </div>
-            </div>
-             
 
-         <script>
-            // Create Room using POST
-               document.getElementById('createRoomBtn').addEventListener('click', () => {
-                fetch('/room/create', {
-                  method: 'POST',
-                 })
-               .then(res => res.json())
-               .then(data => {
-        if (data.roomId) {
-          // Redirect to the created room
-          window.location.href = `/room/${data.roomId}`;
-        } else {
-          alert('Room creation failed.');
-        }
-      })
-      .catch(error => {
-        console.error('Error creating room:', error);
-      });
-    });
- 
-  // Join Room using input
-  document.getElementById('joinRoomBtn').addEventListener('click', () => {
-    const roomId = document.getElementById('roomIdInput').value.trim();
-    if (roomId) {
-      window.location.href = `/room/${roomId}`;
-    } else {
-      alert('Please enter a valid Room ID.');
-    }
-  });
-</script>
+            <script>
+                // Create Room using POST
+                document.getElementById('createRoomBtn').addEventListener('click', () => {
+                    fetch('/room/create', {
+                        method: 'POST',
+                    })
+                        .then((res) => res.json())
+                        .then((data) => {
+                            if (data.roomId) {
+                                // Redirect to the created room
+                                window.location.href = `/room/${data.roomId}`;
+                            } else {
+                                alert('Room creation failed.');
+                            }
+                        })
+                        .catch((error) => {
+                            console.error('Error creating room:', error);
+                        });
+                });
 
+                // Join Room using input
+                document.getElementById('joinRoomBtn').addEventListener('click', () => {
+                    const roomId = document.getElementById('roomIdInput').value.trim();
+                    if (roomId) {
+                        window.location.href = `/room/${roomId}`;
+                    } else {
+                        alert('Please enter a valid Room ID.');
+                    }
+                });
+            </script>
         </div>
 
         <script src="/socket.io/socket.io.js"></script>
@@ -88,8 +84,10 @@
                 const chatForm = document.getElementById('chat-form');
                 const chatBox = document.getElementById('chat-box');
                 const messageInput = chatForm ? chatForm.querySelector('input[name="message"]') : null;
+                const selfUrl = '<%= selfUrl %>'; // Local storage
+                console.log('selfHost', selfUrl);
 
-                const socket = io('http://localhost:8001', {
+                const socket = io(selfUrl, {
                     transports: ['websocket'],
                     withCredentials: true, // Handles authentication sessions if needed
                 });
@@ -107,9 +105,7 @@
                 // **Fetch previous messages when the page loads**
                 async function fetchMessages() {
                     try {
-                        const response = await fetch(
-                            `http://localhost:8001/messages?senderId=${currentUserId}&receiverId=${matchedUserId}`,
-                        );
+                        const response = await fetch(`${selfUrl}/messages?senderId=${currentUserId}&receiverId=${matchedUserId}`);
                         if (!response.ok) {
                             throw new Error(`HTTP error! Status: ${response.status}`);
                         }
@@ -164,18 +160,17 @@
 
                 // **Function to display messages**
                 function appendMessage(sender, content) {
-    const messageElement = document.createElement('div');
-    messageElement.classList.add('message');
-    if (sender === 'You') {
-        messageElement.classList.add('from-you');
-    } else {
-        messageElement.classList.add('from-them');
-    }
-    messageElement.innerHTML = `<strong>${sender}:</strong> ${content}`;
-    chatBox.appendChild(messageElement);
-    chatBox.scrollTop = chatBox.scrollHeight;
-}
-
+                    const messageElement = document.createElement('div');
+                    messageElement.classList.add('message');
+                    if (sender === 'You') {
+                        messageElement.classList.add('from-you');
+                    } else {
+                        messageElement.classList.add('from-them');
+                    }
+                    messageElement.innerHTML = `<strong>${sender}:</strong> ${content}`;
+                    chatBox.appendChild(messageElement);
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                }
 
                 console.log('Chat script loaded successfully!');
             });
