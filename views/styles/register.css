@@ -1,12 +1,17 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-  }
+  font-family: Arial, sans-serif;
+  background-image: url('/assets/Back ground.png'); 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  position: relative;
+}
   
   .register-container {
     background-color: #fff;
@@ -14,6 +19,8 @@ body {
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 320px;
+    padding-top: 40px;
+  padding-bottom: 40px;
   }
   
   .register-container h1 {
@@ -26,11 +33,25 @@ body {
   .register-container form {
     display: flex;
     flex-direction: column;
+    height: 240px;
   }
   
-  .register-container form div {
-    margin-bottom: 15px;
-  }
+ .register-container form div {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center; 
+  justify-content: flex-start; 
+  gap: 10px;
+}
+
+
+.register-container form input[type="text"],
+.register-container form input[type="email"],
+.register-container form input[type="password"] {
+  width: 220px; 
+  margin-left: 5px;
+}
+
  
   .register-container form label {
     font-weight: bold;
@@ -51,12 +72,12 @@ body {
   }
   
   .register-container form input:focus {
-    border-color: #4CAF50;
+    border-color: #ff8da5;
     outline: none;
   }
  
   .register-container form button[type="submit"] {
-    background-color: #4CAF50;
+    background-color: #ff8da5;
     color: white;
     border: none;
     padding: 12px;
@@ -67,7 +88,7 @@ body {
   }
   
   .register-container form button[type="submit"]:hover {
-    background-color: #45a049;
+    background-color: #ff8da5;
   }
 
   .register-container a {
@@ -82,4 +103,30 @@ body {
   .register-container a:hover {
     color: #333;
   }
-  
+
+  .animated-text {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #9e4b57; 
+  font-size: 2.5rem; 
+  font-weight: 700;
+  font-family: 'Georgia', serif; 
+  text-shadow: 0 0 10px rgba(158, 75, 87, 0.6); 
+  animation: slideFadeIn 4s ease-in-out infinite alternate;
+  z-index: 10;
+  user-select: none; 
+  white-space: nowrap; 
+}
+
+@keyframes slideFadeIn {
+  0% {
+    opacity: 0.4;
+    transform: translateX(-50%) translateY(-25px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}

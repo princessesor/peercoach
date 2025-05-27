@@ -7,10 +7,20 @@
 
   <!-- Link to your stylesheet -->
   <link rel="stylesheet" href="/styles/main.css">
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
 
 </head>
 <body>
+
+   <div class="login-wrapper">
+   <div class="bee-graphic">
+    <img src="/assets/loginPage.gif" alt="Bee Handshake" />
+  </div>
+
+  <div class="form-wrapper">
+  <h1 class="logo"> PeerBees </h1>
   <div class="container">
+
     <h1>Login to Join the Club</h1>
 
     <% if (messages.error) { %>
@@ -32,6 +42,8 @@
     </form>
 
     <a href="/register"> Don't have an account? Register </a>
+  </div>
+  </div>
   </div>
 </body>
 </html>

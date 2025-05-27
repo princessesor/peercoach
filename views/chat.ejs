@@ -5,12 +5,22 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Chat with <%= matchedUser.name %></title>
 
-        <link rel="stylesheet" href="/styles/main.css" />
+        <link rel="stylesheet" href="/styles/chat.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
     </head>
     <body>
         <div class="container">
+            
+            <!-- Back to Matches Button -->
+            <button class="back-button" onclick="window.location.href='/matchesPage'">
+                <i class="fas fa-arrow-left"></i> Back to Matches</button>
+            
+            <div class="title-container">
             <h1>Chat with <%= matchedUser.name %></h1>
-
+            </div>
+            
             <div id="chat-box" class="chat-box">
                 <!-- Messages will be dynamically added here -->
             </div>
@@ -18,20 +28,23 @@
             <!-- Chat Form -->
             <form id="chat-form" class="chat-form">
                 <input type="text" name="message" placeholder="Type your message here" required class="chat-input" />
-                <button type="submit" class="send-button">Send</button>
+                <button type="submit" class="send-button">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
             </form>
 
-            <!-- Back to Matches Button -->
-            <button class="back-button" onclick="window.location.href='/matchesPage'">Back to Matches</button>
+            <!-- Create Room Button at the top right -->
+            <button id="createRoomBtn" class="create-room-btn">
+               Create Room   <i class="fas fa-plus-circle"></i></button>
             
-            <!-- Create Room and Join Room Buttons -->
+            <!-- Room Actions: Join Room button at the bottom -->
             <div class="room-actions">
-                <div>
-                 <!-- Buttons -->
-            <button id="createRoomBtn">Create Room</button>
-            <button id="joinRoomBtn">Join Room</button>
-            <input type="text" id="roomIdInput" placeholder="Enter Room ID to Join" />   
-                </div>
+                <div class="join-room-container" >
+            <input type="text" id="roomIdInput" placeholder="Enter Room ID to Join" class="room-input" />   
+                <button id="joinRoomBtn" class="join-room-btn">
+                 <i class="fas fa-door-open"></i>
+                 </button>
+            </div>
             </div>
              
 
@@ -151,14 +164,18 @@
 
                 // **Function to display messages**
                 function appendMessage(sender, content) {
-                    const messageElement = document.createElement('div');
-                    messageElement.classList.add('message');
-                    messageElement.innerHTML = `<strong>${sender}:</strong> ${content}`;
-                    chatBox.appendChild(messageElement);
+    const messageElement = document.createElement('div');
+    messageElement.classList.add('message');
+    if (sender === 'You') {
+        messageElement.classList.add('from-you');
+    } else {
+        messageElement.classList.add('from-them');
+    }
+    messageElement.innerHTML = `<strong>${sender}:</strong> ${content}`;
+    chatBox.appendChild(messageElement);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
 
-                    // Scroll chat box to the bottom
-                    chatBox.scrollTop = chatBox.scrollHeight;
-                }
 
                 console.log('Chat script loaded successfully!');
             });

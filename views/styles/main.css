@@ -1,105 +1,160 @@
+/* Reset and base */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-html,
-body {
-    height: 100%;
-    font-family: 'Arial', sans-serif; /* Set a global font */
-    background-color: #f4f4f9; /* Light background */
-    color: #333; /* Dark text color */
-    line-height: 1.6; /* Improve readability with line height */
-}
-
-body {
+html, body {
+    height: 100vh;
+    font-family: 'Arial', sans-serif;
+    background-color: #fce8e3; /* dusty soft pink background */
     display: flex;
-    justify-content: center; /* Center horizontally */
-    align-items: flex-start; /* Align items at the top */
-    text-align: left; /* Optional: Set left text alignment for more readability */
+    justify-content: center;
+    align-items: center;
     padding: 20px;
-    margin: 0;
-    background-color: #f4f4f9;
 }
 
-.container {
-    max-width: 1000px;
+.form-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  width: 100%;
+  max-width: 400px;
+}
+
+.logo {
+  font-family: 'Pacifico', cursive;
+  font-size: 2.8rem;
+  color: #d16b86;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+
+/* Wrapper for form and bee graphic */
+.login-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px; /* spacing between form and bee */
+    max-width: 1200px;
     width: 100%;
-    margin: 0 auto; /* Center it */
-    padding: 30px; /* Added more padding for a spacious feel */
-    background-color: #fff; /* White background for content */
-    border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Softer, wider shadow */
+    padding: 40px 20px;
 }
 
-h1,
-h2,
-h3 {
-    margin-bottom: 15px;
+/* Bee graphic styling */
+.bee-graphic img,
+.bee-graphic video {
+    width: 450px;
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px; /* optional rounded corners */
+    object-fit: contain;
+    align-self: flex-end; /* pushes the bee slightly lower */
+}
+
+/* Form container with floating glass effect */
+.container {
+    background: rgba(255, 255, 255, 0.2); /* translucent white */
+    backdrop-filter: blur(10px); /* blurry background behind */
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1); /* soft shadow */
+    padding: 40px 30px;
+    max-width: 400px;
+    width: 100%;
     color: #333;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Headings */
+h1, h2, h3 {
+    color: #333;
+    margin-bottom: 15px;
 }
 
 h1 {
-    font-size: 2rem; /* Larger font size for main title */
-    font-weight: 600; /* Slightly bolder for emphasis */
+    font-size: 2rem;
+    font-weight: 600;
+    text-align: center;
 }
 
-h2 {
-    font-size: 1.5rem; /* Slightly smaller for subheadings */
-    font-weight: 500;
+/* Input styles */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.6);
+    font-size: 1rem;
+    color: #333;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    transition: box-shadow 0.3s ease;
 }
 
-h3 {
-    font-size: 1.2rem;
-    font-weight: 400;
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+    outline: none;
+    box-shadow: 0 0 8px #ff8da5;
+    background: rgba(255, 255, 255, 0.9);
 }
 
+/* Button styling */
 button {
-    padding: 12px 24px; /* More padding for a bigger button */
-    background-color: #007bff;
+    padding: 14px 24px;
+    background-color: #ff8da5;
     color: white;
     border: none;
-    border-radius: 6px; /* Slightly rounder corners */
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s ease; /* Smooth color transition */
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #d16b86;
 }
 
+/* Link styling */
 a {
-    color: #007bff;
+    color: #ff8da5;
     text-decoration: none;
-    font-weight: 500; /* Make the link slightly bolder for clarity */
+    font-weight: 500;
+    display: block;
+    text-align: center;
+    margin-top: 15px;
 }
 
 a:hover {
     text-decoration: underline;
 }
 
-/* Add some spacing between sections */
-section {
-    margin-bottom: 30px;
-}
-
-/* Small devices (Mobile) responsiveness */
+/* Responsive for smaller devices */
 @media (max-width: 768px) {
-    body {
-        padding: 10px;
+    .login-wrapper {
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    .bee-graphic img,
+    .bee-graphic video {
+        width: 80%;
+        max-width: 300px;
+        align-self: center;
+        margin-bottom: 30px;
     }
 
     .container {
-        padding: 15px; /* Adjust container padding for smaller screens */
-    }
-
-    h1 {
-        font-size: 1.8rem; /* Reduce font size for headings */
-    }
-
-    button {
-        padding: 10px 20px; /* Smaller padding for buttons */
+        max-width: 100%;
+        padding: 30px 20px;
     }
 }
+
